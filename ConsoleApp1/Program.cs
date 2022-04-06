@@ -1,5 +1,6 @@
 ﻿using ConsoleApp1;
 using ConsoleApp1.Models;
+using Microsoft.EntityFrameworkCore;
 
 Context db = new Context();
 
@@ -99,7 +100,7 @@ TaskX task3 = new TaskX
 //db.SaveChanges();
 string a = "";
 List<User> users = db.Users.ToList();
-List<TaskX> tasks = db.TaskXes.ToList();
+List<TaskX> tasks = new List<TaskX>(db.TaskXes.Include(x => x.Status)).ToList();
 int s = 1;
 //void CheckProfile(User Check)
 //{
@@ -129,29 +130,29 @@ void ViewTasks(List<TaskX> tasks)
         {
             Console.WriteLine($"Название - {item.Title}");
             Console.WriteLine($"Описание - {item.Description}");
-            Console.WriteLine($"Статус - {item.StatusId}");
+            Console.WriteLine($"Статус - {item.Status.Title}");
         }
     }
 }
-ViewTasks(tasks);
-//List<TaskX> CheckAvailableTasks()
-//{
-//    List<TaskX> AvailableTasks = new List<TaskX>();
-//    foreach (var item in tasks)
-//    {
-//        if (item.Status == "Не готово")
-//        {
-//            Console.WriteLine($"Номер - {item.Id}");
-//            Console.WriteLine($"Название - {item.Title}");
-//            Console.WriteLine($"Описание - {item.Description}");
-//            Console.WriteLine($"Дата - {item.Date}");
-//            Console.WriteLine($"Пользователь - {users.Find(x => x.Id == item.Id).Login}");
-//            AvailableTasks.Add(item);
-//        }
-//    }
-//    Console.WriteLine($"Доступно {AvailableTasks.Count} задач");
-//    return AvailableTasks;
-//}
+
+List<TaskX> CheckAvailableTasks()
+{
+    List<TaskX> AvailableTasks = new List<TaskX>();
+    foreach (var item in tasks)
+    {
+        if (item.StatusId == 1)
+        {
+            Console.WriteLine($"Номер - {item.Id}");
+            Console.WriteLine($"Название - {item.Title}");
+            Console.WriteLine($"Описание - {item.Description}");
+            Console.WriteLine($"Дата - {item.Date}");
+            Console.WriteLine($"Пользователь - {users.Find(x => x.Id == item.Id).Login}");
+            AvailableTasks.Add(item);
+        }
+    }
+    Console.WriteLine($"Доступно {AvailableTasks.Count} задач");
+    return AvailableTasks;
+}
 //void ViewAvailableTasks(List<TaskX> tasks, List<User> users, User Check)
 //{
 //    List<TaskX> AvailableTasks = CheckAvailableTasks();
@@ -184,29 +185,37 @@ ViewTasks(tasks);
 //    }
 
 //}
-//void GetRegistre(string Login)
-//{
-//    Console.WriteLine("Замечательно!");
-//    Console.WriteLine($"Ваш логин: {Login}");
-//    while (users.Exists(x => x.Login == Login) == true)
-//    {
-//        Console.WriteLine("Такой логин уже существует");
-//        Console.Write("Попробуйте что-нибудь другое: ");
-//        Login = Console.ReadLine();
-//    }
-//    Console.Write("Теперь придумайте себе пароль: ");
-//    string NewPass = Console.ReadLine();
-//    Console.Write("Введите своё имя: ");
-//    string NewFirstName = Console.ReadLine();
-//    Console.Write("Введите свою фамилию: ");
-//    string NewSecondName = Console.ReadLine();
-//    Console.Write("Введите своё отчество: ");
-//    string NewLastName = Console.ReadLine();
-//    int NewId = users.Count + 1;
-//    User NewUser = new User(NewId, NewSecondName, NewFirstName, NewLastName, Login, NewPass);
-//    users.Add(NewUser);
-//    Console.WriteLine();
-//}
+void GetRegistre(string Login)
+{
+    Console.WriteLine("Замечательно!");
+    Console.WriteLine($"Ваш логин: {Login}");
+    while (users.Exists(x => x.Login == Login) == true)
+    {
+        Console.WriteLine("Такой логин уже существует");
+        Console.Write("Попробуйте что-нибудь другое: ");
+        Login = Console.ReadLine();
+    }
+    Console.Write("Теперь придумайте себе пароль: ");
+    string NewPass = Console.ReadLine();
+    Console.Write("Введите своё имя: ");
+    string NewFirstName = Console.ReadLine();
+    Console.Write("Введите свою фамилию: ");
+    string NewSecondName = Console.ReadLine();
+    Console.Write("Введите своё отчество: ");
+    string NewLastName = Console.ReadLine();
+    int NewId = users.Count + 1;
+    User NewUser = new User()
+    {
+        FirstName = NewFirstName,
+        SecondName = NewSecondName,
+        LastName = NewLastName,
+        Login = Login,
+        Password = NewPass
+    };
+    db.Users.Add(NewUser);
+    db.SaveChanges();
+    Console.WriteLine();
+}
 //void ChangeStatus(User Check, List<TaskX> tasks)
 //{
 //    Console.WriteLine("Ваши задачи");
@@ -241,28 +250,28 @@ ViewTasks(tasks);
 
 //    }
 //}
-//void Filter(DateOnly UserStart, DateOnly UserEnd)
-//{
-//    if (UserStart > UserEnd)
-//    {
-//        Console.WriteLine("Неверный ввод");
-//    }
-//    else
-//    {
-//        List<TaskX> DateTasks = tasks.Where(x => x.Date < UserEnd && x.Date > UserStart).ToList();
-//        if (DateTasks.Count() == 0)
-//        {
-//            Console.WriteLine($"Список задач за промежуток {UserStart}-{UserEnd} пуст");
-//        }
-//        foreach (var item in DateTasks)
-//        {
-//            Console.WriteLine($"Название - {item.Title}");
-//            Console.WriteLine($"Автор - {item.UserGet}");
-//            Console.WriteLine($"Дата - {item.Date}");
-//            Console.WriteLine($"Ответ - {item.Answer}");
-//        }
-//    }
-//}
+void Filter(DateTime UserStart, DateTime UserEnd)
+{
+    if (UserStart > UserEnd)
+    {
+        Console.WriteLine("Неверный ввод");
+    }
+    else
+    {
+        List<TaskX> DateTasks = tasks.Where(x => x.Date < UserEnd && x.Date > UserStart).ToList();
+        if (DateTasks.Count() == 0)
+        {
+            Console.WriteLine($"Список задач за промежуток {UserStart}-{UserEnd} пуст");
+        }
+        foreach (var item in DateTasks)
+        {
+            Console.WriteLine($"Название - {item.Title}");
+            //Console.WriteLine($"Автор - {item.UserGet}");
+            Console.WriteLine($"Дата - {item.Date}");
+            Console.WriteLine($"Ответ - {item.Answer}");
+        }
+    }
+}
 //void MainF(User Check, List<TaskX> tasks, List<User> users)
 //{
 //    while (true)
@@ -329,7 +338,7 @@ ViewTasks(tasks);
 //                int month = Convert.ToInt32(Console.ReadLine());
 //                Console.Write("День - ");
 //                int day = Convert.ToInt32(Console.ReadLine());
-//                DateOnly UserStart = new DateOnly(year, month, day);
+//                DateTime UserStart = new DateOnly(year, month, day);
 //                Console.WriteLine("Введите конец поиска: ");
 //                Console.Write("Год - ");
 //                year = Convert.ToInt32(Console.ReadLine());
@@ -337,7 +346,7 @@ ViewTasks(tasks);
 //                month = Convert.ToInt32(Console.ReadLine());
 //                Console.Write("День - ");
 //                day = Convert.ToInt32(Console.ReadLine());
-//                DateOnly UserEnd = new DateOnly(year, month, day);
+//                DateTime UserEnd = new DateOnly(year, month, day);
 //                Filter(UserStart, UserEnd);
 //                Console.Write("Нажмите любую кнопку, чтобы вернуться на главный экран: ");
 //                a = Console.ReadLine();
@@ -369,9 +378,33 @@ ViewTasks(tasks);
 //    }
 //}
 
-//Console.WriteLine("Добро пожаловать в систему 'Вопрос-ответ'!");
-//Console.Write("Введите свой логин для входа в систему: ");
-//string Login = Console.ReadLine();
+Console.WriteLine("Добро пожаловать в систему 'Вопрос-ответ'!");
+Console.Write("Введите свой логин для входа в систему: ");
+string Login = Console.ReadLine();
+Console.Write("Введите пароль: ");
+string Password = Console.ReadLine();
+var client = db.Users.FirstOrDefault(q => q.Login == Login && q.Password == Password);
+if (client == null)
+{
+    Console.WriteLine("Увы, такого пользователя не существует");
+    Console.WriteLine("Хотите зарегистрироваться? 1 - да other - нет");
+    int IsRegistr = Convert.ToInt32(Console.ReadLine());
+    if (IsRegistr == 1)
+    {
+        GetRegistre(Login);
+        var Check = users.Find(x => x.Login == Login);
+        //MainF(Check, tasks, users);
+    }
+    else
+    {
+        Console.WriteLine("Ладно(");
+    }
+}
+else if (client != null)
+{
+    var Check = users.Find(x => x.Login == Login);
+
+}
 //if (users.Exists(x => x.Login == Login) == true)
 //{
 //    Console.Write("Введите пароль: ");
@@ -390,18 +423,6 @@ ViewTasks(tasks);
 //}
 //else
 //{
-//    Console.WriteLine("Увы, такого пользователя не существует");
-//    Console.WriteLine("Хотите зарегистрироваться? 1 - да other - нет");
-//    int IsRegistr = Convert.ToInt32(Console.ReadLine());
-//    if (IsRegistr == 1)
-//    {
-//        GetRegistre(Login);
-//        var Check = users.Find(x => x.Login == Login);
-//        MainF(Check, tasks, users);
-//    }
-//    else
-//    {
-//        Console.WriteLine("Ладно(");
-//    }
+    
 //}
 
