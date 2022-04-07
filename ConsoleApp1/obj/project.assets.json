@@ -1861,23 +1861,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\forda\\.nuget\\packages\\": {},
+    "C:\\Users\\gr604_mieol\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\forda\\source\\repos\\FAQ-task\\ConsoleApp1\\ConsoleApp1.csproj",
+      "projectUniqueName": "C:\\Users\\gr604_mieol\\Source\\Repos\\FAQ-task\\ConsoleApp1\\ConsoleApp1.csproj",
       "projectName": "ConsoleApp1",
-      "projectPath": "C:\\Users\\forda\\source\\repos\\FAQ-task\\ConsoleApp1\\ConsoleApp1.csproj",
-      "packagesPath": "C:\\Users\\forda\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\forda\\source\\repos\\FAQ-task\\ConsoleApp1\\obj\\",
+      "projectPath": "C:\\Users\\gr604_mieol\\Source\\Repos\\FAQ-task\\ConsoleApp1\\ConsoleApp1.csproj",
+      "packagesPath": "C:\\Users\\gr604_mieol\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\gr604_mieol\\Source\\Repos\\FAQ-task\\ConsoleApp1\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\forda\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\gr604_mieol\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -1940,7 +1940,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }
