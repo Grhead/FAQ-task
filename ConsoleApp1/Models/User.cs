@@ -8,10 +8,6 @@ namespace ConsoleApp1.Models
 {
     public class User
     {
-        public User()
-        {
-            TaskXes = new HashSet<TaskX>();
-        }
         public int Id { get; set; }
         public string SecondName { get; set; }
         public string FirstName { get; set; }
@@ -19,6 +15,7 @@ namespace ConsoleApp1.Models
         public string Login { get; set; }
         public string Password { get; set; }
 
-        public virtual ICollection<TaskX> TaskXes { get; set; }
+        public virtual ICollection<TaskX> TaskXesGet { get; set; }
+        public virtual ICollection<TaskX> TaskXesSet { get; set; }
     }
 }

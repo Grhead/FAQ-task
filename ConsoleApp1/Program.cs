@@ -44,7 +44,7 @@ TaskX task0 = new TaskX
     Description = "Easy Level",
     Date = new DateTime(2022, 10, 01),
     UsersSetId = 1,
-    //UsersGetId = 2,
+    UsersGetId = 2,
     StatusId = 1,
     Answer = ""
 };
@@ -54,7 +54,7 @@ TaskX task1 = new TaskX
     Description = "Easy Level",
     Date = new DateTime(2022, 11, 09),
     UsersSetId = 2,
-    //UsersGetId = 1,
+    UsersGetId = 1,
     StatusId = 3,
     Answer = ""
 };
@@ -64,7 +64,7 @@ TaskX task2 = new TaskX
     Description = "Hard Level",
     Date = new DateTime(2022, 06, 04),
     UsersSetId = 3,
-    //UsersGetId = 2,
+    UsersGetId = 2,
     StatusId = 2,
     Answer = ""
 };
@@ -74,30 +74,30 @@ TaskX task3 = new TaskX
     Description = "Medium Level",
     Date = new DateTime(2022, 12, 20),
     UsersSetId= 2,
-    //UsersGetId = 3,
+    UsersGetId = 3,
     StatusId = 2,
     Answer = ""
 };
-//db.Statuses.Add(new Status() { Title = "Не готово" });
-//db.Statuses.Add(new Status() { Title = "Выполняется" });
-//db.Statuses.Add(new Status() { Title = "Готово" });
-//db.SaveChanges();
-//db.Users.Add(user0);
-//db.SaveChanges();
-//db.Users.Add(user1);
-//db.SaveChanges();
-//db.Users.Add(user2);
-//db.SaveChanges();
-//db.Users.Add(user3);
-//db.SaveChanges();
-//db.TaskXes.Add(task0);
-//db.SaveChanges();
-//db.TaskXes.Add(task1);
-//db.SaveChanges();
-//db.TaskXes.Add(task2);
-//db.SaveChanges();
-//db.TaskXes.Add(task3);
-//db.SaveChanges();
+db.Statuses.Add(new Status() { Title = "Не готово" });
+db.Statuses.Add(new Status() { Title = "Выполняется" });
+db.Statuses.Add(new Status() { Title = "Готово" });
+db.SaveChanges();
+db.Users.Add(user0);
+db.SaveChanges();
+db.Users.Add(user1);
+db.SaveChanges();
+db.Users.Add(user2);
+db.SaveChanges();
+db.Users.Add(user3);
+db.SaveChanges();
+db.TaskXes.Add(task0);
+db.SaveChanges();
+db.TaskXes.Add(task1);
+db.SaveChanges();
+db.TaskXes.Add(task2);
+db.SaveChanges();
+db.TaskXes.Add(task3);
+db.SaveChanges();
 string a = "";
 List<User> users = db.Users.ToList();
 List<TaskX> tasks = new List<TaskX>(db.TaskXes.Include(x => x.Status)).ToList();
@@ -141,7 +141,7 @@ List<TaskX> CheckAvailableTasks()
     {
         if (item.StatusId == 1)
         {
-            Console.WriteLine($"Номер - {item.}");
+            Console.WriteLine($"Номер - {item.Id}");
             Console.WriteLine($"Название - {item.Title}");
             Console.WriteLine($"Описание - {item.Description}");
             Console.WriteLine($"Дата - {item.Date}");

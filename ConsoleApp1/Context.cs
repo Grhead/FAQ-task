@@ -24,18 +24,22 @@ namespace ConsoleApp1
                 optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=FAQdb;Trusted_Connection=True;");
             }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<User>()
-        //                .HasMany(task => task.TaskXes)
-        //                .WithOne(con => con.UserSet);
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TaskX>()
+                    .HasOne(x => x.UsersSet)
+                    .WithMany(x => x.TaskXesSet)
+                    .HasForeignKey(x => x.UsersSetId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
-        //    modelBuilder.Entity<TaskX>()
-        //                .HasMany(task => task.UsersGetId)
-        //                .HasForeignKey(con => con.UserSet);
+            modelBuilder.Entity<TaskX>()
+                    .HasOne(x => x.UsersGet)
+                    .WithMany(x => x.TaskXesGet)
+                    .HasForeignKey(x => x.UsersGetId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
-        //    base.OnModelCreating(modelBuilder);
-        //}
+            base.OnModelCreating(modelBuilder);
+        }
 
     }
 }
