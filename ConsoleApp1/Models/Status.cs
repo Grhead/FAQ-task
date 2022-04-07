@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1.Models
 {
-    public partial class Status
+    public class Status
     {
         public int Id { get; set; }
         public string Title { get; set; }

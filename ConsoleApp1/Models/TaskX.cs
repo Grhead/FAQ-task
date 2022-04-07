@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp1.Models
 {
-    public partial class TaskX
+    public class TaskX
     {
         public TaskX()
         {

@@ -14,7 +14,6 @@ namespace ConsoleApp1
             { 
                 Database.EnsureCreated();
             }
-            
             public DbSet<Models.User> Users { get; set; }
             public DbSet<Models.TaskX> TaskXes { get; set; }
             public DbSet<Models.Status> Statuses { get; set; }
@@ -23,7 +22,6 @@ namespace ConsoleApp1
             {
                 optionsBuilder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=FAQdb;Trusted_Connection=True;");
             }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TaskX>()
@@ -37,7 +35,6 @@ namespace ConsoleApp1
                     .WithMany(x => x.TaskXesGet)
                     .HasForeignKey(x => x.UsersGetId)
                     .OnDelete(DeleteBehavior.Restrict);
-
             base.OnModelCreating(modelBuilder);
         }
 
