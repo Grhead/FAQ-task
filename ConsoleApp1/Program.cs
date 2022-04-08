@@ -154,9 +154,8 @@ List<TaskX> CheckAvailableTasks()
     return AvailableTasks;
 }
 
-void ViewAvailableTasks(List<TaskX> tasks, User Check)
+void ViewAvailableTasks(User Check)
 {
-    var users = db.Users.ToList();
     var AvailableTasks = CheckAvailableTasks();
     Console.Write("Выберите одну из доступных задач: ");
     if (AvailableTasks.Count == 0)
@@ -234,39 +233,50 @@ User GetRegistre(string Login)
 
 void ChangeStatus(User Check, List<TaskX> tasks)
 {
+    int count = 0;
     Console.WriteLine("Ваши задачи");
     foreach (var item in tasks.Where(x => x.UsersSetId == Check.Id).ToList())
     {
         Console.WriteLine($"Номер - {item.Id}");
         Console.WriteLine($"Название - {item.Title}");
         Console.WriteLine($"Описание - {item.Description}");
+        count++;
     }
 
-    Console.WriteLine("Выберите ту, где хотите изменить статус");
-    var ChoiceGetTask = Convert.ToInt32(Console.ReadLine());
-    if (ChoiceGetTask > tasks.Where(x => x.UsersGetId == Check.Id).Count())
+    if (count == 0)
     {
-        Console.WriteLine("Неверный ввод");
+        Console.WriteLine("Список ваших задач пуст");
+        
     }
     else
     {
-        Console.WriteLine($"Вы выбрали задачу {tasks[ChoiceGetTask].Title}");
-        Console.WriteLine($"Откликнулся на задачу {tasks[ChoiceGetTask].UsersGetId}");
-        Console.WriteLine($"Ответ {tasks[ChoiceGetTask].Answer}");
-        Console.WriteLine("Подтверждаете изменение статуса задачи: 1 - да Other - нет");
-        var GetTaskChangeStatus = Convert.ToInt32(Console.ReadLine());
-        if (GetTaskChangeStatus == 1)
+        Console.WriteLine("Выберите ту, где хотите изменить статус");
+        var ChoiceGetTask = Convert.ToInt32(Console.ReadLine());
+        if (ChoiceGetTask > tasks.Where(x => x.UsersGetId == Check.Id).Count())
         {
-            var ToPush = db.TaskXes.FirstOrDefault(x => x.Title == tasks[ChoiceGetTask].Title);
-            ToPush.StatusId = 3;
-            Console.WriteLine("Ответ принят");
-            db.SaveChanges();
+            Console.WriteLine("Неверный ввод");
         }
         else
         {
-            Console.WriteLine("Решение отклонено");
+            Console.WriteLine($"Вы выбрали задачу {tasks[ChoiceGetTask].Title}");
+            Console.WriteLine($"Откликнулся на задачу {tasks[ChoiceGetTask].UsersGetId}");
+            Console.WriteLine($"Ответ {tasks[ChoiceGetTask].Answer}");
+            Console.WriteLine("Подтверждаете изменение статуса задачи: 1 - да Other - нет");
+            var GetTaskChangeStatus = Convert.ToInt32(Console.ReadLine());
+            if (GetTaskChangeStatus == 1)
+            {
+                var ToPush = db.TaskXes.FirstOrDefault(x => x.Title == tasks[ChoiceGetTask].Title);
+                ToPush.StatusId = 3;
+                Console.WriteLine("Ответ принят");
+                db.SaveChanges();
+            }
+            else
+            {
+                Console.WriteLine("Решение отклонено");
+            }
         }
     }
+    
 }
 
 void Filter(DateTime UserStart, DateTime UserEnd)
@@ -324,7 +334,7 @@ void MainF(User Check, List<TaskX> tasks, List<User> users)
                 break;
             case 4:
                 Console.WriteLine("Доступные задачи: ");
-                ViewAvailableTasks(tasks, Check);
+                ViewAvailableTasks(Check);
                 Console.Write("Нажмите любую кнопку, чтобы вернуться на главный экран: ");
                 a = Console.ReadLine();
                 break;
@@ -339,7 +349,7 @@ void MainF(User Check, List<TaskX> tasks, List<User> users)
                     Console.WriteLine($"Автор - {item.UsersGetId}");
                     Console.WriteLine($"Дата - {item.Date}");
                     Console.WriteLine($"Ответ - {item.Answer}");
-                    Console.WriteLine($"Статус - {item.Status}");
+                    Console.WriteLine($"Статус - {item.Status.Title}");
                 }
 
                 Console.Write("Нажмите любую кнопку, чтобы вернуться на главный экран: ");
@@ -347,6 +357,8 @@ void MainF(User Check, List<TaskX> tasks, List<User> users)
                 break;
             case 6:
                 ChangeStatus(Check, tasks);
+                Console.Write("Нажмите любую кнопку, чтобы вернуться на главный экран: ");
+                a = Console.ReadLine();
                 break;
             case 7:
                 Console.WriteLine("Введите начало поиска: ");
@@ -397,9 +409,8 @@ void MainF(User Check, List<TaskX> tasks, List<User> users)
 Console.WriteLine("Добро пожаловать в систему 'Вопрос-ответ'!");
 Console.Write("Введите свой логин для входа в систему: ");
 var Login = Console.ReadLine();
-Console.Write("Введите пароль: ");
-var Password = Console.ReadLine();
-var Check = db.Users.FirstOrDefault(q => q.Login == Login && q.Password == Password);
+var Check = db.Users.FirstOrDefault(q => q.Login == Login);
+
 if (Check == null)
 {
     Console.WriteLine("Увы, такого пользователя не существует");
@@ -417,5 +428,13 @@ if (Check == null)
 }
 else if (Check != null)
 {
+    Console.Write("Введите пароль: ");
+    var Password = Console.ReadLine();
+    while (Check.Password != Password)
+    {
+        Console.WriteLine("Неверный пароль. Попробуйте снова");
+        Console.Write("Введите пароль: ");
+        Password = Console.ReadLine();
+    }
     MainF(Check, tasks, users);
 }
