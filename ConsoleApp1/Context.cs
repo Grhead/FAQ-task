@@ -28,13 +28,16 @@ namespace ConsoleApp1
                     .HasOne(x => x.UsersSet)
                     .WithMany(x => x.TaskXesSet)
                     .HasForeignKey(x => x.UsersSetId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired(false);
+
 
             modelBuilder.Entity<TaskX>()
                     .HasOne(x => x.UsersGet)
                     .WithMany(x => x.TaskXesGet)
                     .HasForeignKey(x => x.UsersGetId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .IsRequired(false);
             base.OnModelCreating(modelBuilder);
         }
 

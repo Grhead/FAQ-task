@@ -101,6 +101,9 @@ var task3 = new TaskX
 var a = "";
 var users = db.Users.ToList();
 var tasks = new List<TaskX>(db.TaskXes.Include(x => x.Status)).ToList();
+Console.BackgroundColor = ConsoleColor.White;
+Console.Clear();
+Console.ForegroundColor = ConsoleColor.Black;
 
 void CheckProfile(User Check)
 {
@@ -233,11 +236,23 @@ User GetRegistre(string Login)
 
 void ChangeStatus(User Check, List<TaskX> tasks)
 {
+    List <TaskX> ListToChange = new List<TaskX>();
     int count = 0;
-    Console.WriteLine("Ваши задачи");
-    foreach (var item in tasks.Where(x => x.UsersSetId == Check.Id).ToList())
+    foreach (var item in tasks)
     {
-        Console.WriteLine($"Номер - {item.Id}");
+        if (item.UsersSetId == Check.Id && item.StatusId == 2)
+        {
+            ListToChange.Add(item);
+            Console.WriteLine($"Номер - {ListToChange.Count - 1}");
+            Console.WriteLine($"Название - {item.Title}");
+            Console.WriteLine($"Описание - {item.Description}");
+            count++;
+        }
+    }
+    Console.WriteLine("Ваши задачи");
+    foreach (var item in ListToChange)
+    {
+        Console.WriteLine($"Номер - {ListToChange.Count - 1}");
         Console.WriteLine($"Название - {item.Title}");
         Console.WriteLine($"Описание - {item.Description}");
         count++;
@@ -252,20 +267,20 @@ void ChangeStatus(User Check, List<TaskX> tasks)
     {
         Console.WriteLine("Выберите ту, где хотите изменить статус");
         var ChoiceGetTask = Convert.ToInt32(Console.ReadLine());
-        if (ChoiceGetTask > tasks.Where(x => x.UsersGetId == Check.Id).Count())
+        if (ChoiceGetTask > ListToChange.Count())
         {
             Console.WriteLine("Неверный ввод");
         }
         else
         {
-            Console.WriteLine($"Вы выбрали задачу {tasks[ChoiceGetTask].Title}");
-            Console.WriteLine($"Откликнулся на задачу {tasks[ChoiceGetTask].UsersGetId}");
-            Console.WriteLine($"Ответ {tasks[ChoiceGetTask].Answer}");
+            Console.WriteLine($"Вы выбрали задачу {ListToChange[ChoiceGetTask].Title}");
+            Console.WriteLine($"Откликнулся на задачу {users.FirstOrDefault(x => x.Id == ListToChange[ChoiceGetTask].UsersGetId)}");
+            Console.WriteLine($"Ответ {ListToChange[ChoiceGetTask].Answer}");
             Console.WriteLine("Подтверждаете изменение статуса задачи: 1 - да Other - нет");
             var GetTaskChangeStatus = Convert.ToInt32(Console.ReadLine());
             if (GetTaskChangeStatus == 1)
             {
-                var ToPush = db.TaskXes.FirstOrDefault(x => x.Title == tasks[ChoiceGetTask].Title);
+                var ToPush = db.TaskXes.FirstOrDefault(x => x.Title == ListToChange[ChoiceGetTask].Title);
                 ToPush.StatusId = 3;
                 Console.WriteLine("Ответ принят");
                 db.SaveChanges();
@@ -314,6 +329,7 @@ void MainF(User Check, List<TaskX> tasks, List<User> users)
         Console.WriteLine("6 - Изменить статус своей задач");
         Console.WriteLine("7 - Фильтровать задачи по дате");
         Console.WriteLine("8 - Искать задачи");
+        Console.WriteLine("9 - Создать задачу");
         var Choise = Convert.ToInt32(Console.ReadLine());
         switch (Choise)
         {
@@ -401,6 +417,20 @@ void MainF(User Check, List<TaskX> tasks, List<User> users)
                 }
                 Console.Write("Нажмите любую кнопку, чтобы вернуться на главный экран: ");
                 a = Console.ReadLine();
+                break;
+            case 9:
+                Console.WriteLine("У вас возник вопрос! Давайте создадим задачу");
+                Console.WriteLine(" >>>>>>>>>>>Сформулируйте задачу<<<<<<<<<<<");
+                string NewTaskString = Console.ReadLine();
+                TaskX NewTask = new TaskX();
+                NewTask.StatusId = 1;
+                NewTask.UsersSetId = Check.Id;
+                NewTask.Title = $"Task#{tasks.Count+1}";
+                NewTask.Description = NewTaskString;
+                NewTask.Date = DateTime.Now;
+                db.TaskXes.Add(NewTask);
+                db.SaveChanges();
+                tasks = new List<TaskX>(db.TaskXes.Include(x => x.Status)).ToList();
                 break;
         }
     }

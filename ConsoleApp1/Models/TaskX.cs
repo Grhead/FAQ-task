@@ -15,12 +15,12 @@ namespace ConsoleApp1.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime Date { get; set; }
-        public int UsersSetId { get; set; }
-        public virtual User UsersSet { get; set; }
-        public int UsersGetId { get; set; }
-        public virtual User UsersGet { get; set; }
+        public int? UsersSetId { get; set; }
+        public int? UsersGetId { get; set; }
         public int StatusId { get; set; }
+        public string? Answer { get; set; }
+        public virtual User UsersSet { get; set; }
+        public virtual User UsersGet { get; set; }
         public virtual Status Status { get; set; }
-        public string Answer { get; set; }
     }
 }
